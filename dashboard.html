@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-g">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        /* CSS RESET & GENERAL STYLES */
+        :root {
+            --bg-color: #F7F7F7;
+            --sidebar-bg: #FFFFFF;
+            --main-bg: #FFFFFF;
+            --card-yellow: rgb(246, 248, 100);
+            --card-dark-gray: #5A5A5A;
+            --primary-text: #212121;
+            --secondary-text: #757575;
+            --border-color: #E0E0E0;
+            --white-color: #FFFFFF;
+            --active-nav-bg: #F0F0F0;
+            --active-status-bg: #E8F5E9; /* Light Green */
+            --active-status-text: #4CAF50; /* Green */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            display: flex;
+        }
+
+        /* MAIN LAYOUT */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            width: 260px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .sidebar .logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .sidebar nav ul {
+            list-style-type: none;
+        }
+
+        .sidebar nav li {
+            margin-bottom: 16px;
+        }
+
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--secondary-text);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar nav a i {
+            font-size: 22px;
+            margin-right: 12px;
+        }
+
+        .sidebar nav a:hover {
+            background-color: var(--active-nav-bg);
+            color: var(--primary-text);
+        }
+
+        .sidebar nav a.active {
+            background-color: var(--active-nav-bg);
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            flex-grow: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+        }
+
+        /* HEADER */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .main-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-bar {
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--sidebar-bg);
+            font-size: 14px;
+        }
+
+        .user-account {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-initials {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .user-account span {
+            font-weight: 500;
+        }
+
+        /* CARDS & ACCOUNTS SECTION */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 16px;
+            height: 180px;
+            color: var(--primary-text);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card.platinum {
+            background-color: var(--card-yellow);
+        }
+
+        .card.salary {
+            background-color: var(--card-dark-gray);
+            color: var(--white-color);
+        }
+        
+        .card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .card .card-type {
+            font-size: 12px;
+            font-weight: 600;
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .card.salary .card-type {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card .card-name {
+            font-weight: 600;
+        }
+        
+        .card .card-footer .card-number {
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        .add-card {
+            border: 2px dashed #BDBDBD;
+            background-color: #FBFBFB;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            color: var(--secondary-text);
+            font-weight: 500;
+        }
+        
+        .add-card-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #BDBDBD;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            color: var(--secondary-text);
+            margin-bottom: 12px;
+        }
+        
+        .accounts-summary {
+            background-color: var(--main-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        
+        .accounts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .accounts-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .accounts-header i {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .total-balance {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .balance-subtext {
+            color: var(--secondary-text);
+            font-size: 12px;
+            margin-bottom: 16px;
+        }
+
+        .company-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .company-name {
+            font-weight: 600;
+        }
+
+        .company-header .bxs-circle, .company-header .bx-dots-vertical-rounded {
+            color: var(--secondary-text);
+        }
+        
+        .company-balance {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .company-cards-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-counts {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--secondary-text);
+        }
+        
+        .card-counts span {
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .status-active {
+            background-color: var(--active-status-bg);
+            color: var(--active-status-text);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+
+        /* TRANSACTIONS SECTION */
+        .transactions-section {
+            background-color: var(--main-bg);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .balance-details .current-balance {
+            font-size: 28px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .balance-details .current-balance i {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .balance-details .card-info {
+            color: var(--secondary-text);
+            font-size: 14px;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 12px;
+        }
+        
+        .btn-details {
+            background-color: #F5F5F5;
+        }
+
+        .btn-add-money {
+            background-color: #2979FF;
+            color: var(--white-color);
+            border-color: #2979FF;
+        }
+        
+        .transactions-list .list-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 2fr 1fr 1.5fr;
+            padding: 0 16px 12px 16px;
+            color: var(--secondary-text);
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .list-header .amount {
+            text-align: right;
+        }
+        
+        .transaction-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 2fr 1fr 1.5fr;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #E3F2FD;
+            display: grid;
+            place-items: center;
+        }
+
+        .transaction-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .transaction-store {
+            font-weight: 500;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">LOGO</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                    <li><a href="#"><i class='bx bx-credit-card'></i> Cards</a></li>
+                    <li><a href="#"><i class='bx bx-wallet'></i> Accounts</a></li>
+                    <li><a href="#"><i class='bx bx-transfer'></i> Transactions</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Enter card name or number">
+                    </div>
+                    <div class="user-account">
+                        <div class="user-initials">EH</div>
+                        <span>Account</span>
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                <div class="cards-and-balance">
+                    <div class="cards-container">
+                        <div class="card platinum">
+                            <div class="card-header">
+                                <span class="card-type">VIRTUAL</span>
+                                <span class="card-name">Main</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-name">PLATINUM</div>
+                                <div class="card-number">7413 •••• ••••</div>
+                            </div>
+                        </div>
+
+                        <div class="card salary">
+                             <div class="card-header">
+                                <span class="card-type">VIRTUAL</span>
+                                <span class="card-name">LOGO</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-name">SALARY</div>
+                                <div class="card-number">5176 •••• ••••</div>
+                            </div>
+                        </div>
+
+                        <div class="add-card">
+                            <div class="add-card-icon" ><a href="kyc1.html">+</a></div>
+                            <div>View & Manage Cards</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accounts-summary">
+                    <div class="accounts-header">
+                        <h3>Accounts</h3>
+                        <i class='bx bx-plus-circle'></i>
+                    </div>
+                    <div class="total-balance">$54,200.02</div>
+                    <div class="balance-subtext">Total balance across accounts</div>
+                    
+                    <div class="company-card">
+                        <div class="company-header">
+                            <span class="company-name">XYZ Company</span>
+                            <i class='bx bx-dots-vertical-rounded'></i>
+                        </div>
+                        <div class="company-balance">$26,950.00</div>
+                        <div class="company-cards-info">
+                            <div class="card-counts">
+                                Cards: <span>1</span>R <span>4</span>NR <span>1</span>P
+                            </div>
+                            <div class="status-active">Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="transactions-section">
+                <div class="transactions-header">
+                    <div class="balance-details">
+                        <div class="current-balance">$26,426.50 <i class='bx bx-chevron-down'></i></div>
+                        <div class="card-info">Card 7413 - Main</div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-details">Details</button>
+                        <button class="btn-add-money">Add Money</button>
+                    </div>
+                </div>
+
+                <div class="transactions-list">
+                    <div class="list-header">
+                        <div>Transaction</div>
+                        <div>Date</div>
+                        <div>Account</div>
+                        <div>Card</div>
+                        <div class="amount">Amount</div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-detail">
+                            <div class="transaction-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg" alt="walmart logo">
+                            </div>
+                            <div class="transaction-store">Walmart</div>
+                        </div>
+                        <div class="transaction-date">10:22am</div>
+                        <div class="transaction-account">Connect4Dig</div>
+                        <div class="transaction-card">7413</div>
+                        <div class="transaction-amount">$149.45</div>
+                    </div>
+                    
+                    <div class="transaction-item">
+                        <div class="transaction-detail">
+                            <div class="transaction-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg" alt="walmart logo">
+                            </div>
+                            <div class="transaction-store">Walmart</div>
+                        </div>
+                        <div class="transaction-date">10:22am</div>
+                        <div class="transaction-account">Connect4Dig</div>
+                        <div class="transaction-card">7413</div>
+                        <div class="transaction-amount">$149.45</div>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div class="transaction-detail">
+                            <div class="transaction-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg" alt="walmart logo">
+                            </div>
+                            <div class="transaction-store">Walmart</div>
+                        </div>
+                        <div class="transaction-date">10:22am</div>
+                        <div class="transaction-account">Connect4Dig</div>
+                        <div class="transaction-card">7413</div>
+                        <div class="transaction-amount">$149.45</div>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div class="transaction-detail">
+                            <div class="transaction-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg" alt="walmart logo">
+                            </div>
+                            <div class="transaction-store">Walmart</div>
+                        </div>
+                        <div class="transaction-date">10:22am</div>
+                        <div class="transaction-account">Connect4Dig</div>
+                        <div class="transaction-card">7413</div>
+                        <div class="transaction-amount">$149.45</div>
+                    </div>
+                    
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
